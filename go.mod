@@ -1,3 +1,3 @@
-module github.com/lwch/kconf
+module github.com/lwch/kvconf
 
 go 1.16
