@@ -84,7 +84,29 @@ func (d *Decoder) fill(line int, value reflect.Value, k, v string) error {
 	}
 }
 
+type Unmarshaler interface {
+	UnmarshalKV(string) error
+}
+
 func (d *Decoder) set(line int, value reflect.Value, v string) error {
+	if value.Type().NumMethod() > 0 && value.CanInterface() {
+		if dec, ok := value.Interface().(Unmarshaler); ok {
+			err := dec.UnmarshalKV(v)
+			if err != nil {
+				return fmt.Errorf("unmarshal custom value on line %d failed, err=%v", line, err)
+			}
+			return nil
+		}
+	}
+	if value.CanAddr() && value.Addr().Type().NumMethod() > 0 && value.Addr().CanInterface() {
+		if dec, ok := value.Addr().Interface().(Unmarshaler); ok {
+			err := dec.UnmarshalKV(v)
+			if err != nil {
+				return fmt.Errorf("unmarshal custom value on line %d failed, err=%v", line, err)
+			}
+			return nil
+		}
+	}
 	switch value.Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		n, err := strconv.ParseInt(v, 10, 64)
@@ -113,7 +135,7 @@ func (d *Decoder) set(line int, value reflect.Value, v string) error {
 	case reflect.String:
 		value.SetString(v)
 	default:
-		return fmt.Errorf("unexpected value type of %s on line %d", value.Type().String(), line)
+		return &UnsupportedTypeError{value.Type()}
 	}
 	return nil
 }

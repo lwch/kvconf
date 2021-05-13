@@ -2,6 +2,7 @@ package kvconf
 
 import (
 	"reflect"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -68,5 +69,42 @@ b = c`
 	err = NewDecoder(strings.NewReader(str)).Decode(&st2)
 	if err != nil {
 		t.Fatalf("decode st2 failed: %v", err)
+	}
+}
+
+type size uint64
+
+func (s *size) UnmarshalKV(v string) error {
+	scale := uint64(1)
+	switch {
+	case strings.HasSuffix(v, "G"):
+		scale = 1024 * 1024 * 1024
+		v = strings.TrimSuffix(v, "G")
+	case strings.HasSuffix(v, "M"):
+		scale = 1024 * 1024
+		v = strings.TrimSuffix(v, "M")
+	case strings.HasSuffix(v, "K"):
+		scale = 1024
+		v = strings.TrimSuffix(v, "K")
+	}
+	n, err := strconv.ParseInt(v, 10, 64)
+	if err != nil {
+		return err
+	}
+	*s = size(uint64(n) * scale)
+	return nil
+}
+
+func TestDecodeCustom(t *testing.T) {
+	str := "size = 30M"
+	var st struct {
+		Size size `kv:"size"`
+	}
+	err := NewDecoder(strings.NewReader(str)).Decode(&st)
+	if err != nil {
+		t.Fatalf("decode custom struct failed: %v", err)
+	}
+	if st.Size != 30*1024*1024 {
+		t.Fatalf("unexpected size value, want %d current %d", 30*1024*1024, st.Size)
 	}
 }
