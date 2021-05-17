@@ -68,16 +68,21 @@ func (e *Encoder) encodeMap(value reflect.Value) error {
 }
 
 type Marshaler interface {
-	MarshalKV() (k, v string, err error)
+	MarshalKV() (string, error)
 }
 
 func (e *Encoder) encodeStruct(value reflect.Value) error {
 	t := value.Type()
 	for i := 0; i < value.NumField(); i++ {
 		vv := value.Field(i)
+		kf := t.Field(i)
+		k := kf.Tag.Get("kv")
+		if len(k) == 0 {
+			return fmt.Errorf("missing tag value on %s", kf.Name)
+		}
 		if vv.Type().NumMethod() > 0 && vv.CanInterface() {
 			if enc, ok := vv.Interface().(Marshaler); ok {
-				k, v, err := enc.MarshalKV()
+				v, err := enc.MarshalKV()
 				if err != nil {
 					return fmt.Errorf("marshal custom value failed, err=%v", err)
 				}
@@ -94,7 +99,7 @@ func (e *Encoder) encodeStruct(value reflect.Value) error {
 		}
 		if vv.CanAddr() && vv.Addr().Type().NumMethod() > 0 && vv.Addr().CanInterface() {
 			if enc, ok := vv.Addr().Interface().(Marshaler); ok {
-				k, v, err := enc.MarshalKV()
+				v, err := enc.MarshalKV()
 				if err != nil {
 					return fmt.Errorf("marshal custom value failed, err=%v", err)
 				}
@@ -108,11 +113,6 @@ func (e *Encoder) encodeStruct(value reflect.Value) error {
 				}
 				continue
 			}
-		}
-		kf := t.Field(i)
-		k := kf.Tag.Get("kv")
-		if len(k) == 0 {
-			return fmt.Errorf("missing tag value on %s", kf.Name)
 		}
 		str, err := toString(vv)
 		if err != nil {
