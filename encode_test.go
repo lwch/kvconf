@@ -11,7 +11,7 @@ import (
 func TestEncodeUnsupported(t *testing.T) {
 	var buf bytes.Buffer
 	err := NewEncoder(&buf).Encode(1)
-	if err.Error() != "unsupported type: int" {
+	if err.Error() != "kvconf: unsupported type: int" {
 		t.Fatalf("unexpected error: %s", err.Error())
 	}
 }
