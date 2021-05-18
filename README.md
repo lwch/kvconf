@@ -1,6 +1,9 @@
 # kvconf
 
+[![Build Status](https://www.travis-ci.com/lwch/kvconf.svg)](https://www.travis-ci.com/lwch/kvconf)
+[![codecov](https://codecov.io/gh/lwch/kvconf/branch/master/graph/badge.svg?token=W5991040E2)](https://codecov.io/gh/lwch/kvconf)
 [![Go Reference](https://pkg.go.dev/badge/github.com/lwch/kvconf.svg)](https://pkg.go.dev/github.com/lwch/kvconf)
+[![Go Report Card](https://goreportcard.com/badge/github.com/lwch/kvconf)](https://goreportcard.com/report/github.com/lwch/kvconf)
 
 golang simple kv configure file library
 
