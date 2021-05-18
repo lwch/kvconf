@@ -8,13 +8,21 @@ import (
 	"testing"
 )
 
+func TestEncodeUnsupported(t *testing.T) {
+	var buf bytes.Buffer
+	err := NewEncoder(&buf).Encode(1)
+	if err.Error() != "unsupported type: int" {
+		t.Fatalf("unexpected error: %s", err.Error())
+	}
+}
+
 func TestEncodeMap(t *testing.T) {
 	mp := map[string]interface{}{
 		"a": "b",
 		"c": 2,
 	}
 	var buf bytes.Buffer
-	err := NewEncoder(&buf).Encode(&mp)
+	err := NewEncoder(&buf).Encode(mp)
 	if err != nil {
 		t.Fatalf("encode map failed: %v", err)
 	}
