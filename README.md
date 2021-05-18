@@ -9,7 +9,7 @@ golang simple kv configure file library
 
 ## install
 
-go get github.com/lwch/kvconf
+    go get github.com/lwch/kvconf
 
 ## example
 
