@@ -86,7 +86,7 @@ func (e *Encoder) encodeStruct(value reflect.Value) error {
 		kf := t.Field(i)
 		k := kf.Tag.Get("kv")
 		if len(k) == 0 {
-			return fmt.Errorf("missing tag value on %s", kf.Name)
+			continue
 		}
 		if vv.Type().NumMethod() > 0 && vv.CanInterface() {
 			if enc, ok := vv.Interface().(Marshaler); ok {
