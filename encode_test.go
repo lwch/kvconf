@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"runtime"
+	"strings"
 	"testing"
 )
 
@@ -21,9 +22,11 @@ func TestEncodeMap(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		newLine = "\r\n"
 	}
-	if buf.String() != "a=b"+newLine+
-		"c=2"+newLine {
-		t.Fatalf("encode map failed\n%s", buf.String())
+	if !strings.Contains(buf.String(), "a=b"+newLine) {
+		t.Fatalf("encode map failed: unexpected a value\n%s", buf.String())
+	}
+	if !strings.Contains(buf.String(), "c=2"+newLine) {
+		t.Fatalf("encode map failed: unexpected c value\n%s", buf.String())
 	}
 }
 
