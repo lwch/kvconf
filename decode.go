@@ -11,14 +11,17 @@ import (
 	"strings"
 )
 
+// Decoder unmarshal decoder
 type Decoder struct {
 	r *bufio.Scanner
 }
 
+// NewDecoder create decoder
 func NewDecoder(r io.Reader) *Decoder {
 	return &Decoder{r: bufio.NewScanner(r)}
 }
 
+// Decode decode value from io.Reader, supported map[string]string and struct with kv tag
 func (d *Decoder) Decode(v interface{}) error {
 	vv := reflect.ValueOf(v)
 	if vv.Kind() != reflect.Ptr {
@@ -84,6 +87,7 @@ func (d *Decoder) fill(line int, value reflect.Value, k, v string) error {
 	}
 }
 
+// Unmarshaler custom unmarshaler interface
 type Unmarshaler interface {
 	UnmarshalKV(string) error
 }

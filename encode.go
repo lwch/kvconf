@@ -7,14 +7,17 @@ import (
 	"runtime"
 )
 
+// Encoder marshal encoder
 type Encoder struct {
 	w io.Writer
 }
 
+// NewEncoder create marshaler
 func NewEncoder(w io.Writer) *Encoder {
 	return &Encoder{w: w}
 }
 
+// Encode encode value to io.Writer, supported map[string]string and struct with kv tag
 func (e *Encoder) Encode(v interface{}) error {
 	vv := reflect.ValueOf(v)
 	if vv.Kind() == reflect.Ptr {
@@ -67,6 +70,7 @@ func (e *Encoder) encodeMap(value reflect.Value) error {
 	return nil
 }
 
+// Marshaler custom marshaler interface
 type Marshaler interface {
 	MarshalKV() (string, error)
 }
