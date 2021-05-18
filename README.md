@@ -1,5 +1,7 @@
 # kvconf
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/lwch/kvconf.svg)](https://pkg.go.dev/github.com/lwch/kvconf)
+
 golang simple kv configure file library
 
 ## install
