@@ -48,7 +48,7 @@ c = d`
 func TestDecodeStruct(t *testing.T) {
 	str :=
 		`a = 1
-b = 1
+b = 2
 c = true
 d = 3.14
 e = abc`
@@ -67,7 +67,7 @@ e = abc`
 	if st1.A != 1 {
 		t.Fatalf("unexpected st1 value of a, want 1 current %d", st1.A)
 	}
-	if st1.B != 1 {
+	if st1.B != 2 {
 		t.Fatalf("unexpected st1 value of b, want 1 current %d", st1.B)
 	}
 	if !st1.C {

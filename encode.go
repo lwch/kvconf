@@ -39,6 +39,10 @@ func toString(value reflect.Value) (string, error) {
 		return fmt.Sprintf("%d", value.Int()), nil
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		return fmt.Sprintf("%d", value.Uint()), nil
+	case reflect.Float32, reflect.Float64:
+		return fmt.Sprintf("%g", value.Float()), nil
+	case reflect.Bool:
+		return fmt.Sprintf("%t", value.Bool()), nil
 	case reflect.String:
 		return value.String(), nil
 	default:
