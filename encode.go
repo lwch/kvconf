@@ -51,10 +51,9 @@ func toString(value reflect.Value) (string, error) {
 }
 
 func (e *Encoder) encodeMap(value reflect.Value) error {
-	it := value.MapRange()
-	for it.Next() {
-		k := it.Key()
-		v := it.Value()
+	keys := value.MapKeys()
+	for _, k := range keys {
+		v := value.MapIndex(k)
 		if v.Kind() == reflect.Interface {
 			v = v.Elem()
 		}
