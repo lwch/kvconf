@@ -65,6 +65,9 @@ func (d *Decoder) fill(line int, value reflect.Value, k, v string) error {
 		t := value.Type()
 		for i := 0; i < t.NumField(); i++ {
 			kf := t.Field(i)
+			if kf.Tag.Get("kv") == "-" {
+				continue
+			}
 			if kf.Tag.Get("kv") == k {
 				return d.set(line, value.Field(i), v)
 			}

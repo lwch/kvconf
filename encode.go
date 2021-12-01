@@ -87,6 +87,9 @@ func (e *Encoder) encodeStruct(value reflect.Value) error {
 		if len(k) == 0 {
 			continue
 		}
+		if k == "-" {
+			continue
+		}
 		if vv.Type().NumMethod() > 0 && vv.CanInterface() {
 			if enc, ok := vv.Interface().(Marshaler); ok {
 				v, err := enc.MarshalKV()

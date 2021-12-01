@@ -100,3 +100,17 @@ func TestEncodeCustom(t *testing.T) {
 		t.Fatalf("encode custom struct failed\n%s", buf.String())
 	}
 }
+
+func TestEncodeEmpty(t *testing.T) {
+	var st struct {
+		Dummy string `kv:"-"`
+	}
+	var buf bytes.Buffer
+	err := NewEncoder(&buf).Encode(&st)
+	if err != nil {
+		t.Fatalf("encode empty struct: %v", err)
+	}
+	if len(buf.String()) > 0 {
+		t.Fatalf("encode empty struct failed, is not empty")
+	}
+}

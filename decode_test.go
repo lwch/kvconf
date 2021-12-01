@@ -123,3 +123,17 @@ func TestDecodeCustom(t *testing.T) {
 		t.Fatalf("unexpected size value, want %d current %d", 30*1024*1024, st.Size)
 	}
 }
+
+func TestDecodeEmpty(t *testing.T) {
+	str := ""
+	var st struct {
+		Dummy string `kv:"-"`
+	}
+	err := NewDecoder(strings.NewReader(str)).Decode(&st)
+	if err != nil {
+		t.Fatalf("decode empty struct failed: %v", err)
+	}
+	if len(st.Dummy) > 0 {
+		t.Fatal("unexpected decode empty struct")
+	}
+}
